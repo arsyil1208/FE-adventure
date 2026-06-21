@@ -8,16 +8,15 @@ const fmt = (n) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
 
 const BANK_INFO = [
-  { bank: 'BCA',     norek: '1234567890', atas_nama: 'OpenTrip Indonesia' },
-  { bank: 'BNI',     norek: '9876543210', atas_nama: 'OpenTrip Indonesia' },
-  { bank: 'Mandiri', norek: '1122334455', atas_nama: 'OpenTrip Indonesia' },
+  { bank: 'BCA',     norek: 'Belum Tersedia', atas_nama: '-' },
+  { bank: 'BNI',     norek: 'Belum Tersedia', atas_nama: '-' },
+  { bank: 'Mandiri', norek: 'Belum Tersedia', atas_nama: '-' },
 ];
 
 const WALLET_INFO = [
-  { platform: 'GoPay',     nomor: '081234567890', atas_nama: 'OpenTrip' },
-  { platform: 'OVO',       nomor: '081234567890', atas_nama: 'OpenTrip' },
-  { platform: 'DANA',      nomor: '081234567890', atas_nama: 'OpenTrip' },
-  { platform: 'ShopeePay', nomor: '081234567890', atas_nama: 'OpenTrip' },
+  { platform: 'GoPay',     nomor: '087777160675', atas_nama: 'De Arsyil Putera' },
+  { platform: 'DANA',      nomor: '087777160675', atas_nama: 'De Arsyil Putera' },
+  { platform: 'ShopeePay', nomor: '087777160675', atas_nama: 'De Arsyil Putera' },
 ];
 
 export default function UserBuatBayar() {

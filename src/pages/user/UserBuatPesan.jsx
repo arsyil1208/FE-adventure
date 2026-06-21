@@ -34,30 +34,41 @@ export default function UserBuatPesan() {
       .finally(() => setLoading(false));
   }, [id_trip]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSaving(true);
-    try {
-      const res = await createPemesanan({
-        id_trip,
-        jumlah_peserta: jumlah,
-        deskripsi,
-        nik,
-        nama_lengkap: nama,
-        jenis_kelamin: jenisKelamin,
-        tanggal_lahir: tanggalLahir,
-        no_hp: noHp,
-        email,
-        kontak_darurat: kontakDarurat
-      });
-      navigate(`/bayar/${res.data.data.id_pemesanan}`);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Gagal membuat pemesanan.');
-    } finally {
-      setSaving(false);
+  //ininya error terus bete
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError('');
+  setSaving(true);
+  try {
+    const res = await createPemesanan({
+      id_trip,
+      jumlah_peserta: jumlah,
+      deskripsi,
+      nik,
+      nama_lengkap: nama,
+      jenis_kelamin: jenisKelamin,
+      tanggal_lahir: tanggalLahir,
+      no_hp: noHp,
+      email,
+      kontak_darurat: kontakDarurat
+    });
+
+    console.log('Response:', res.data); // cek isi response
+
+    const idPemesanan = res.data?.data?.id_pemesanan;
+    if (!idPemesanan) {
+      throw new Error('ID pemesanan tidak ditemukan di response');
     }
-  };
+
+    navigate(`/bayar/${idPemesanan}`);
+  } catch (err) {
+    console.error('Error:', err);
+    setError(err.response?.data?.message || err.message || 'Gagal membuat pemesanan.');
+  } finally {
+    setSaving(false);
+  }
+};
+
 
   return (
     <UserLayout>

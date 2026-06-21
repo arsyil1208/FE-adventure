@@ -13,7 +13,7 @@ export default function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid px-3">
-        <Link className="navbar-brand fw-bold" to={isAdmin ? '/dashboard' : '/trips'}>
+        <Link className="navbar-brand fw-bold" to={isAdmin ? '/admin/dashboard' : '/trips'}>
           NalaysraAdventure
         </Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
@@ -24,22 +24,22 @@ export default function Navbar() {
             {isAdmin && (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/dashboard">Dashboard</Link>
+                  <Link className="nav-link" to="/admin/dashboard">Dashboard</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/gunung">Gunung</Link>
+                  <Link className="nav-link" to="/admin/gunung">Gunung</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/trips">Nalaysra Adventure</Link>
+                  <Link className="nav-link" to="/admin/trips">Nalaysra Adventure</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/pemesanan">Pemesanan</Link>
+                  <Link className="nav-link" to="/admin/pemesanan">Pemesanan</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/pembayaran">Pembayaran</Link>
+                  <Link className="nav-link" to="/admin/pembayaran">Pembayaran</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/users">Users</Link>
+                  <Link className="nav-link" to="/admin/users">Users</Link>
                 </li>
               </>
             )}
@@ -66,7 +66,7 @@ export default function Navbar() {
                   </Link>
                 </li>
                 <li className="nav-item d-flex align-items-center">
-                  <Link className="nav-link btn btn-outline-light btn-sm me-2" to={isAdmin ? '/dashboard' : '/trips'} style={{ padding: '6px 10px' }}>
+                  <Link className="nav-link btn btn-outline-light btn-sm me-2" to={isAdmin ? '/admin/dashboard' : '/trips'} style={{ padding: '6px 10px' }}>
                     Dashboard
                   </Link>
                 </li>

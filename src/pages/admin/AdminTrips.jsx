@@ -13,7 +13,6 @@ const EMPTY_TRIP = {
   tanggal_pulang: '', kuota: '', harga: '', include_trip: '', status: 'open',
 };
 const EMPTY_GUNUNG = { nama_gunung: '', lokasi: '', ketinggian: '', deskripsi: '', gambar: null };
-
 const fmt = (n) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
 const statusColor = { open: 'success', full: 'warning', selesai: 'primary', dibatalkan: 'secondary' };
@@ -30,6 +29,11 @@ export default function AdminTrips() {
   const [saving, setSaving] = useState(false);
   const [error, setError]   = useState('');
   const [success, setSuccess] = useState('');
+
+  // Trip foto
+  const [tripFile, setTripFile]       = useState(null);
+  const [previewTrip, setPreviewTrip] = useState(null);
+  const tripFileRef = useRef();
 
   // Gunung inline form
   const [showGunungForm, setShowGunungForm] = useState(false);
@@ -61,7 +65,9 @@ export default function AdminTrips() {
   const openModal = (t = null) => {
     setError(''); setShowGunungForm(false);
     setGunung(EMPTY_GUNUNG); setPreviewG(null);
+    setTripFile(null); setPreviewTrip(null);
     if (fileRef.current) fileRef.current.value = '';
+    if (tripFileRef.current) tripFileRef.current.value = '';
     if (t) {
       setEditId(t.id_trip);
       setTrip({
@@ -69,6 +75,8 @@ export default function AdminTrips() {
         tanggal_berangkat: t.tanggal_berangkat, tanggal_pulang: t.tanggal_pulang,
         kuota: t.kuota, harga: t.harga, include_trip: t.include_trip || '', status: t.status,
       });
+      // tampilkan foto lama jika ada
+      setPreviewTrip(t.gambar ? `${BASE_URL}/uploads/${t.gambar}` : null);
     } else {
       setEditId(null);
       setTrip(EMPTY_TRIP);
@@ -80,8 +88,10 @@ export default function AdminTrips() {
   const handleSubmit = async (e) => {
     e.preventDefault(); setError(''); setSaving(true);
     try {
-      if (editId) await updateTrip(editId, trip);
-      else await createTrip(trip);
+      const payload = { ...trip };
+      if (tripFile) payload.gambar = tripFile;
+      if (editId) await updateTrip(editId, payload);
+      else await createTrip(payload);
       setSuccess(editId ? 'Trip berhasil diperbarui.' : 'Trip berhasil ditambahkan.');
       hideModal(); loadTrips();
     } catch (err) {
@@ -113,6 +123,12 @@ export default function AdminTrips() {
     const f = e.target.files[0];
     setGunung((g) => ({ ...g, gambar: f }));
     setPreviewG(f ? URL.createObjectURL(f) : null);
+  };
+
+  const handleTripFileChange = (e) => {
+    const f = e.target.files[0];
+    setTripFile(f || null);
+    setPreviewTrip(f ? URL.createObjectURL(f) : null);
   };
 
   // ── Hapus trip ────────────────────────────────────────────────
@@ -334,6 +350,33 @@ export default function AdminTrips() {
                   />
                   <div className="form-text">Tulis tiap item di baris baru diawali tanda "-"</div>
                 </div>
+
+                {/* Foto Trip */}
+                <div className="mb-2">
+                  <label className="form-label small">
+                    Foto Trip {!editId && <span className="text-danger">*</span>}
+                    {editId && <span className="text-muted fw-normal"> (kosongkan jika tidak ingin mengubah)</span>}
+                  </label>
+                  <input
+                    type="file"
+                    className="form-control form-control-sm"
+                    ref={tripFileRef}
+                    accept="image/*"
+                    onChange={handleTripFileChange}
+                    required={!editId}
+                  />
+                  {previewTrip && (
+                    <div className="mt-2">
+                      <img
+                        src={previewTrip}
+                        alt="preview trip"
+                        className="rounded"
+                        style={{ maxHeight: 120, maxWidth: '100%', objectFit: 'cover' }}
+                      />
+                    </div>
+                  )}
+                </div>
+
                 {editId && (
                   <div className="mb-2">
                     <label className="form-label small">Status</label>

@@ -16,9 +16,9 @@ export default function PrivateRoute({ children, adminOnly = false }) {
   if (!user) return <Navigate to="/login" replace />;
 
   // Halaman admin, user bukan admin → home
-  if (adminOnly && user.role !== 'admin') return <Navigate to="/" replace />;
+  if (adminOnly && user.role !== 'admin') return <Navigate to="/trips" replace />;
 
-  // Halaman user, yang akses adalah admin → dashboard admin
+  // Halaman user (bukan admin), yang akses adalah admin → dashboard admin
   if (!adminOnly && user.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
 
   return children;

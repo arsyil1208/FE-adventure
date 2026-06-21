@@ -14,6 +14,7 @@ import AdminPemesanan from './pages/admin/AdminPemesanan';
 import AdminPembayaran from './pages/admin/AdminPembayaran';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminPelanggan from './pages/admin/AdminPelanggan';
+import AdminGunung from './pages/admin/AdminGunung';
 
 // User pages
 import UserTrips from './pages/user/UserTrips';
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/admin/pembayaran" element={<PrivateRoute adminOnly><AdminPembayaran /></PrivateRoute>} />
           <Route path="/admin/users" element={<PrivateRoute adminOnly><AdminUsers /></PrivateRoute>} />
           <Route path="/admin/pelanggan" element={<PrivateRoute adminOnly><AdminPelanggan /></PrivateRoute>} />
+          <Route path="/admin/gunung" element={<PrivateRoute adminOnly><AdminGunung /></PrivateRoute>} />
 
           {/* ── USER (harus login) ────────────────────── */}
           <Route path="/trips" element={<PrivateRoute><UserTrips /></PrivateRoute>} />

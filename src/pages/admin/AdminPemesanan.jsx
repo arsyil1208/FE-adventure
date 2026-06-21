@@ -3,6 +3,7 @@ import { getPemesanan, updateStatusPemesanan, deletePemesanan } from '../../api/
 import AdminLayout from '../../components/AdminLayout';
 import Alert from '../../components/Alert';
 import useBootstrapModal from '../../hooks/useBootstrapModal';
+import { BASE_URL } from '../../api/api';
 
 const fmt = (n) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
@@ -30,7 +31,7 @@ export default function AdminPemesanan() {
       const params = {};
       if (filterStatus) params.status = filterStatus;
       const res = await getPemesanan(params);
-      setList(res.data.data);
+      setList(Array.isArray(res.data.data) ? res.data.data : []);
     } catch (err) {
       setError(err.response?.data?.message || 'Gagal memuat data.');
     } finally {
@@ -244,7 +245,7 @@ export default function AdminPemesanan() {
                   </div>
                   <div className="col-md-6">
                     <div className="text-muted small">No. HP</div>
-                    <div className="small">{selected.no_hp || '-'}</div>
+                    <div className="small">{selected.pelanggan_no_hp || '-'}</div>
                   </div>
                   <div className="col-md-6">
                     <div className="text-muted small">Kontak Darurat</div>
@@ -280,6 +281,76 @@ export default function AdminPemesanan() {
                     <div className="col-12">
                       <div className="text-muted small">Catatan</div>
                       <div className="small">{selected.deskripsi}</div>
+                    </div>
+                  )}
+
+                  {/* ── Bukti Pembayaran ── */}
+                  <div className="col-12"><hr className="my-1" /></div>
+                  <div className="col-12">
+                    <div className="text-muted small mb-1 fw-semibold">Pembayaran</div>
+                  </div>
+                  {selected.pembayaran ? (
+                    <>
+                      <div className="col-md-4">
+                        <div className="text-muted small">Metode</div>
+                        <div className="small text-capitalize">
+                          {selected.pembayaran.metode?.replace('_', ' ')}
+                        </div>
+                      </div>
+                      <div className="col-md-4">
+                        <div className="text-muted small">Status Bayar</div>
+                        <span className={`badge bg-${
+                          selected.pembayaran.status === 'lunas'    ? 'success'
+                          : selected.pembayaran.status === 'gagal'  ? 'danger'
+                          : selected.pembayaran.status === 'refund' ? 'info'
+                          : 'warning'
+                        }`}>
+                          {selected.pembayaran.status}
+                        </span>
+                      </div>
+                      <div className="col-md-4">
+                        <div className="text-muted small">Tanggal Bayar</div>
+                        <div className="small">
+                          {selected.pembayaran.tanggal_bayar
+                            ? new Date(selected.pembayaran.tanggal_bayar).toLocaleDateString('id-ID')
+                            : '-'}
+                        </div>
+                      </div>
+                      <div className="col-12">
+                        <div className="text-muted small mb-1">Bukti Transfer</div>
+                        {selected.pembayaran.bukti_bayar ? (
+                          <div>
+                            <a
+                              href={`${BASE_URL}/uploads/${selected.pembayaran.bukti_bayar}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                src={`${BASE_URL}/uploads/${selected.pembayaran.bukti_bayar}`}
+                                alt="Bukti pembayaran"
+                                className="rounded border"
+                                style={{ maxHeight: 200, maxWidth: '100%', objectFit: 'contain', cursor: 'pointer' }}
+                              />
+                            </a>
+                            <div className="mt-1">
+                              <a
+                                href={`${BASE_URL}/uploads/${selected.pembayaran.bukti_bayar}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="small text-primary"
+                              >
+                                Buka gambar penuh ↗
+                              </a>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-muted small fst-italic">Belum ada bukti diunggah.</div>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="col-12">
+                      <div className="text-muted small fst-italic">Belum ada data pembayaran.</div>
                     </div>
                   )}
                 </div>

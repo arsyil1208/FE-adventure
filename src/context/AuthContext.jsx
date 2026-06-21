@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getMe } from '../api/api';
+import API from '../api/api';
 
 const AuthContext = createContext(null);
 
@@ -32,7 +33,12 @@ export function AuthProvider({ children }) {
     setUser(userData);
   };
 
-  const logoutUser = () => {
+  const logoutUser = async () => {
+    try {
+      await API.post('/auth/logout');
+    } catch {
+      // Abaikan error logout — tetap hapus sesi lokal
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
